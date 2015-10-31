@@ -76,5 +76,13 @@ describe 'the person view', type: :feature do
         expect(page).to have_selector('li', text: email_address.address)
       end
     end
+
+    it 'has an add email address link' do
+      expect(page).to have_css('#new_email_address')
+
+      page.find('#new_email_address').click
+
+      expect(current_path).to eq(new_email_address_path)
+    end
   end
 end
