@@ -85,6 +85,8 @@ RSpec.describe PeopleController, type: :controller do
         person = Person.create! valid_attributes
         put :update, {:id => person.to_param, :person => new_attributes}, valid_session
         person.reload
+        expect(person.first_name).to eq('NewFirstName')
+        expect(person.last_name).to eq('NewLastName')
       end
 
       it "assigns the requested person as @person" do
