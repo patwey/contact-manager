@@ -9,7 +9,7 @@ class PhoneNumbersController < ApplicationController
   end
 
   def new
-    @phone_number = PhoneNumber.new(person_id: params[:person_id])
+    @phone_number = PhoneNumber.new(contact_id: params[:contact_id], contact_type: params[:contact_type])
   end
 
   def edit
@@ -20,7 +20,7 @@ class PhoneNumbersController < ApplicationController
 
     respond_to do |format|
       if @phone_number.save
-        format.html { redirect_to @phone_number.person, notice: 'Phone number was successfully created.' }
+        format.html { redirect_to @phone_number.contact, notice: 'Phone number was successfully created.' }
         format.json { render :show, status: :created, location: @phone_number }
       else
         format.html { render :new }
@@ -32,7 +32,7 @@ class PhoneNumbersController < ApplicationController
   def update
     respond_to do |format|
       if @phone_number.update(phone_number_params)
-        format.html { redirect_to @phone_number.person, notice: 'Phone number was successfully updated.' }
+        format.html { redirect_to @phone_number.contact, notice: 'Phone number was successfully updated.' }
         format.json { render :show, status: :ok, location: @phone_number }
       else
         format.html { render :edit }
@@ -44,7 +44,8 @@ class PhoneNumbersController < ApplicationController
   def destroy
     @phone_number.destroy
     respond_to do |format|
-      format.html { redirect_to person_path(@phone_number.person), notice: 'Phone number was successfully destroyed.' }
+      # contact path?
+      format.html { redirect_to person_path(@phone_number.contact), notice: 'Phone number was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -57,6 +58,6 @@ class PhoneNumbersController < ApplicationController
 
 
     def phone_number_params
-      params.require(:phone_number).permit(:number, :person_id)
+      params.require(:phone_number).permit(:number, :contact_id, :contact_type)
     end
 end
