@@ -9,7 +9,8 @@ class EmailAddressesController < ApplicationController
   end
 
   def new
-    @email_address = EmailAddress.new(person_id: params[:person_id])
+    @email_address = EmailAddress.new(contact_id: params[:contact_id],
+                                      contact_type: params[:contact_type])
   end
 
   def edit
@@ -20,7 +21,7 @@ class EmailAddressesController < ApplicationController
 
     respond_to do |format|
       if @email_address.save
-        format.html { redirect_to @email_address.person, notice: 'Email address was successfully created.' }
+        format.html { redirect_to @email_address.contact, notice: 'Email address was successfully created.' }
         format.json { render :show, status: :created, location: @email_address }
       else
         format.html { render :new }
@@ -32,7 +33,7 @@ class EmailAddressesController < ApplicationController
   def update
     respond_to do |format|
       if @email_address.update(email_address_params)
-        format.html { redirect_to @email_address.person, notice: 'Email address was successfully updated.' }
+        format.html { redirect_to @email_address.contact, notice: 'Email address was successfully updated.' }
         format.json { render :show, status: :ok, location: @email_address }
       else
         format.html { render :edit }
@@ -44,7 +45,11 @@ class EmailAddressesController < ApplicationController
   def destroy
     @email_address.destroy
     respond_to do |format|
-      format.html { redirect_to person_path(@email_address.person), notice: 'Email address was successfully destroyed.' }
+      if @email_address.contact_type.downcase == 'person'
+        format.html { redirect_to person_path(@email_address.contact), notice: 'Email address was successfully destroyed.' }
+      else
+        format.html { redirect_to company_path(@email_address.contact), notice: 'Email address was successfully destroyed.' }
+      end
       format.json { head :no_content }
     end
   end
@@ -56,6 +61,6 @@ class EmailAddressesController < ApplicationController
     end
 
     def email_address_params
-      params.require(:email_address).permit(:address, :person_id)
+      params.require(:email_address).permit(:address, :contact_id, :contact_type)
     end
 end
