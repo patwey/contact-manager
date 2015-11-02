@@ -44,8 +44,13 @@ class PhoneNumbersController < ApplicationController
   def destroy
     @phone_number.destroy
     respond_to do |format|
-      # contact path?
-      format.html { redirect_to person_path(@phone_number.contact), notice: 'Phone number was successfully destroyed.' }
+      if @phone_number.contact_type.downcase == 'person'
+        format.html { redirect_to person_path(@phone_number.contact),
+                      notice: 'Phone number was successfully destroyed.' }
+      else
+        format.html { redirect_to company_path(@phone_number.contact),
+                      notice: 'Phone number was successfully destroyed.' }
+      end
       format.json { head :no_content }
     end
   end
